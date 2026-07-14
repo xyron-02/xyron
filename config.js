@@ -1,6 +1,6 @@
 module.exports = {
     api: {
-        baseUrl: 'https://wanz.my.id',
+        baseUrl: 'https://api-xyron.biz.id',
         apiKey: 'pler',
     },
     app: {
