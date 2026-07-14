@@ -1,0 +1,19 @@
+{
+  "name": "xyron-vercel",
+  "version": "1.0.0",
+  "description": "XYRON Web Interface - Proxy ke server.js",
+  "main": "api/connect.js",
+  "scripts": {
+    "start": "node api/connect.js",
+    "dev": "nodemon api/connect.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

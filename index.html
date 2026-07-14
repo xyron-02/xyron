@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Xyron · Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0a0a0a;
+            background-image:
+                radial-gradient(ellipse at 30% 20%, #1a0808 0%, #0a0a0a 70%),
+                radial-gradient(ellipse at 70% 80%, #1a0505 0%, #0a0a0a 60%);
+            font-family: 'Rajdhani', 'Inter', -apple-system, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* GHOST BACKGROUND */
+        .ghost-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .ghost {
+            position: absolute;
+            color: rgba(180, 20, 20, 0.04);
+            font-size: 40px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            letter-spacing: 6px;
+            user-select: none;
+            animation: floatGhost linear infinite;
+            text-shadow: 0 0 40px rgba(255, 0, 0, 0.02);
+            white-space: nowrap;
+        }
+
+        .ghost:nth-child(1) { font-size: 60px; left: -10%; top: 5%; animation-duration: 25s; opacity: 0.03; }
+        .ghost:nth-child(2) { font-size: 80px; right: -15%; top: 15%; animation-duration: 30s; animation-delay: -4s; opacity: 0.02; transform: rotate(-6deg); }
+        .ghost:nth-child(3) { font-size: 40px; left: 15%; bottom: 10%; animation-duration: 20s; animation-delay: -7s; opacity: 0.05; }
+        .ghost:nth-child(4) { font-size: 70px; right: 10%; bottom: 20%; animation-duration: 27s; animation-delay: -12s; opacity: 0.03; transform: rotate(4deg); }
+        .ghost:nth-child(5) { font-size: 30px; left: 5%; top: 45%; animation-duration: 22s; animation-delay: -3s; opacity: 0.06; font-family: 'Rajdhani', sans-serif; letter-spacing: 10px; }
+        .ghost:nth-child(6) { font-size: 50px; right: 5%; top: 55%; animation-duration: 26s; animation-delay: -9s; opacity: 0.02; transform: rotate(-10deg); }
+        .ghost:nth-child(7) { font-size: 25px; left: 50%; top: 5%; animation-duration: 18s; animation-delay: -5s; opacity: 0.07; letter-spacing: 5px; }
+        .ghost:nth-child(8) { font-size: 90px; left: 30%; bottom: -10%; animation-duration: 32s; animation-delay: -14s; opacity: 0.02; transform: rotate(-5deg); }
+
+        @keyframes floatGhost {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.02; }
+            25% { opacity: 0.06; }
+            50% { transform: translate(40px, -60px) scale(1.05) rotate(2deg); opacity: 0.03; }
+            75% { opacity: 0.07; }
+            100% { transform: translate(-30px, 50px) scale(0.95) rotate(-2deg); opacity: 0.02; }
+        }
+
+        .ghost.float-reverse { animation-direction: reverse; }
+
+        /* MAIN CARD */
+        .xyron-card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 520px;
+            background: rgba(8, 8, 8, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 32px;
+            padding: 40px 32px 28px;
+            border: 1px solid rgba(200, 30, 30, 0.12);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(200, 30, 30, 0.06), 0 0 60px rgba(200, 20, 20, 0.03);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .xyron-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(200, 30, 30, 0.3), transparent);
+            border-radius: 100%;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* HEADER */
+        .xyron-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .xyron-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 2px;
+        }
+
+        .xyron-logo i {
+            font-size: 32px;
+            color: #cc2222;
+            filter: drop-shadow(0 0 30px rgba(200, 30, 30, 0.2));
+        }
+
+        .xyron-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #ffffff;
+            text-shadow: 0 0 30px rgba(200, 30, 30, 0.08);
+        }
+
+        .xyron-title .red { color: #cc2222; }
+
+        .xyron-tagline {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 400;
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(180, 180, 180, 0.3);
+            margin-top: 2px;
+        }
+
+        .xyron-tagline i {
+            color: #cc2222;
+            font-size: 5px;
+            margin: 0 8px;
+            vertical-align: middle;
+            opacity: 0.4;
+        }
+
+        .xyron-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(200, 30, 30, 0.08), transparent);
+            margin-top: 14px;
+        }
+
+        /* DESKRIPSI */
+        .xyron-desc {
+            color: rgba(180, 180, 180, 0.35);
+            font-size: 15px;
+            line-height: 1.7;
+            text-align: center;
+            margin: 20px 0 18px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .xyron-desc strong {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+        }
+
+        .xyron-desc .red-text { color: #cc2222; opacity: 0.6; }
+
+        /* INFO GRID */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 16px 0 20px;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(200, 30, 30, 0.04);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item i {
+            color: #cc2222;
+            opacity: 0.3;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .info-item .info-label {
+            color: rgba(180, 180, 180, 0.2);
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .info-item .info-value {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            font-weight: 500;
+            margin-left: auto;
+        }
+
+        /* FEATURES LIST */
+        .feature-list {
+            margin: 14px 0 22px;
+        }
+
+        .feature-list .fl-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            font-size: 14px;
+            color: rgba(180, 180, 180, 0.25);
+            border-bottom: 1px solid rgba(200, 30, 30, 0.03);
+        }
+
+        .feature-list .fl-item:last-child { border-bottom: none; }
+
+        .feature-list .fl-item i {
+            color: #cc2222;
+            opacity: 0.3;
+            font-size: 12px;
+            width: 18px;
+            text-align: center;
+        }
+
+        /* BUTTONS */
+        .xyron-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .xyron-buttons a {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 20px;
+            border-radius: 50px;
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .xyron-buttons .btn-getstarted {
+            background: linear-gradient(145deg, #cc2222, #991111);
+            color: #fff;
+            box-shadow: 0 6px 30px rgba(200, 30, 30, 0.15);
+        }
+
+        .xyron-buttons .btn-getstarted:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(200, 30, 30, 0.25);
+            background: linear-gradient(145deg, #dd3333, #aa1111);
+        }
+
+        .xyron-buttons .btn-pricing {
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(200, 30, 30, 0.06);
+        }
+
+        .xyron-buttons .btn-pricing:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(200, 30, 30, 0.12);
+            color: #fff;
+        }
+
+        /* FOOTER */
+        .xyron-footer {
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(200, 30, 30, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+            font-size: 12px;
+            color: rgba(180, 180, 180, 0.12);
+            letter-spacing: 0.5px;
+        }
+
+        .xyron-footer i {
+            color: #cc2222;
+            opacity: 0.2;
+            font-size: 12px;
+        }
+
+        .xyron-footer .highlight {
+            color: rgba(255, 255, 255, 0.15);
+            font-weight: 400;
+        }
+
+        .xyron-footer .wanz {
+            color: #cc2222;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            font-size: 11px;
+            opacity: 0.6;
+        }
+
+        .xyron-footer .version {
+            color: rgba(180, 180, 180, 0.08);
+            font-size: 11px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            .xyron-card { padding: 28px 18px 20px; border-radius: 28px; }
+            .xyron-title { font-size: 30px; letter-spacing: 3px; }
+            .xyron-logo i { font-size: 26px; }
+            .info-grid { grid-template-columns: 1fr; gap: 6px; }
+            .xyron-buttons a { min-width: 100%; }
+            .xyron-desc { font-size: 14px; }
+            .xyron-buttons { flex-direction: column; }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .xyron-card { padding: 36px 28px 24px; }
+            .xyron-title { font-size: 34px; }
+            .info-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (min-width: 769px) {
+            .xyron-card { padding: 48px 40px 32px; border-radius: 40px; }
+            .xyron-title { font-size: 44px; }
+            .xyron-logo i { font-size: 38px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GHOST BACKGROUND -->
+    <div class="ghost-container" aria-hidden="true">
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+    </div>
+
+    <!-- MAIN CARD -->
+    <div class="xyron-card" role="main" aria-label="Xyron Landing">
+
+        <!-- HEADER -->
+        <div class="xyron-header">
+            <div class="xyron-logo">
+                <i class="fas fa-bolt" aria-hidden="true"></i>
+                <span class="xyron-title"><span class="red">X</span>YRON</span>
+            </div>
+            <div class="xyron-tagline">
+                <i class="fas fa-circle" aria-hidden="true"></i>
+                Bug Whatsapp · next‑gen
+                <i class="fas fa-circle" aria-hidden="true"></i>
+            </div>
+            <div class="xyron-divider"></div>
+        </div>
+
+        <!-- DESKRIPSI -->
+        <p class="xyron-desc">
+            <strong>Xyron</strong> adalah platform manajemen sistem canggih dengan 
+            <span class="red-text">keamanan tinggi</span> dan fitur lengkap untuk kebutuhan digital Anda. 
+            Dirancang untuk memberikan <strong>pengalaman</strong> terbaik dalam mengelola 
+            bug whatsapp, tools, dan lainnya.
+        </p>
+
+        <!-- INFO GRID -->
+        <div class="info-grid">
+            <div class="info-item">
+                <i class="fas fa-shield-alt"></i>
+                <span class="info-label">Keamanan</span>
+                <span class="info-value">End-to-End</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-database"></i>
+                <span class="info-label">Storage</span>
+                <span class="info-value">Cloud Sync</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-microchip"></i>
+                <span class="info-label">Monitoring</span>
+                <span class="info-value">Realtime</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-server"></i>
+                <span class="info-label">Server</span>
+                <span class="info-value">24/7 Active</span>
+            </div>
+        </div>
+
+        <!-- FEATURES LIST -->
+        <div class="feature-list">
+            <div class="fl-item"><i class="fas fa-circle"></i> Dashboard interaktif dengan data realtime</div>
+            <div class="fl-item"><i class="fas fa-circle"></i> Manajemen profil & pengaturan pengguna</div>
+            <div class="fl-item"><i class="fas fa-circle"></i> Pelacakan bug & laporan sistem</div>
+            <div class="fl-item"><i class="fas fa-circle"></i> Sistem pengiriman pesan & broadcast</div>
+            <div class="fl-item"><i class="fas fa-circle"></i> Tools lengkap untuk backup & analitik</div>
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="xyron-buttons">
+            <a href="xyron/login.html" class="btn-getstarted">
+                <i class="fas fa-rocket" aria-hidden="true"></i> Get Started
+            </a>
+            <a href="xyron/pricing.html" class="btn-pricing">
+                <i class="fas fa-crown" aria-hidden="true"></i> Buy Pricing
+            </a>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="xyron-footer">
+            <i class="fas fa-code" aria-hidden="true"></i>
+            <span class="highlight">Created by</span>
+            <span class="wanz">WanzOfficial</span>
+        </div>
+
+    </div>
+
+</body>
+</html>
