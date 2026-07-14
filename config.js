@@ -1,10 +1,10 @@
 module.exports = {
     api: {
-        baseUrl: 'https://xnxx.com',
+        baseUrl: 'https://wanz.my.id',
         apiKey: 'pler',
     },
     app: {
-        name: 'XYRON Web',
+        name: 'XYRON',
         version: '1.0.0'
     }
 };
