@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Xyron · Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== SAMA PERSIS KAYA YANG SEBELUMNYA ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: #0a0a0a;
+            background-image:
+                radial-gradient(ellipse at 30% 20%, #1a0808 0%, #0a0a0a 70%),
+                radial-gradient(ellipse at 70% 80%, #1a0505 0%, #0a0a0a 60%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: 'Rajdhani', 'Inter', -apple-system, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ghost-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .ghost {
+            position: absolute;
+            color: rgba(180, 20, 20, 0.06);
+            font-size: 60px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            letter-spacing: 8px;
+            user-select: none;
+            animation: floatGhost linear infinite;
+            text-shadow: 0 0 40px rgba(255, 0, 0, 0.03);
+            white-space: nowrap;
+        }
+
+        .ghost:nth-child(1) { font-size: 80px; left: -10%; top: 5%; animation-duration: 22s; opacity: 0.05; }
+        .ghost:nth-child(2) { font-size: 120px; right: -15%; top: 15%; animation-duration: 28s; animation-delay: -3s; opacity: 0.04; transform: rotate(-8deg); }
+        .ghost:nth-child(3) { font-size: 50px; left: 20%; bottom: 10%; animation-duration: 18s; animation-delay: -6s; opacity: 0.07; }
+        .ghost:nth-child(4) { font-size: 90px; right: 10%; bottom: 20%; animation-duration: 25s; animation-delay: -10s; opacity: 0.05; transform: rotate(5deg); }
+        .ghost:nth-child(5) { font-size: 40px; left: 5%; top: 45%; animation-duration: 20s; animation-delay: -2s; opacity: 0.08; font-family: 'Rajdhani', sans-serif; letter-spacing: 12px; }
+        .ghost:nth-child(6) { font-size: 70px; right: 5%; top: 55%; animation-duration: 24s; animation-delay: -8s; opacity: 0.04; transform: rotate(-12deg); }
+        .ghost:nth-child(7) { font-size: 30px; left: 50%; top: 5%; animation-duration: 16s; animation-delay: -4s; opacity: 0.09; letter-spacing: 6px; }
+        .ghost:nth-child(8) { font-size: 100px; left: 30%; bottom: -10%; animation-duration: 30s; animation-delay: -12s; opacity: 0.03; transform: rotate(-6deg); }
+        .ghost:nth-child(9) { font-size: 45px; right: 25%; top: 30%; animation-duration: 19s; animation-delay: -7s; opacity: 0.06; }
+        .ghost:nth-child(10) { font-size: 65px; left: 60%; bottom: 30%; animation-duration: 21s; animation-delay: -9s; opacity: 0.05; transform: rotate(10deg); }
+
+        @keyframes floatGhost {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.03; }
+            25% { opacity: 0.08; }
+            50% { transform: translate(60px, -80px) scale(1.1) rotate(3deg); opacity: 0.05; }
+            75% { opacity: 0.09; }
+            100% { transform: translate(-40px, 60px) scale(0.95) rotate(-3deg); opacity: 0.03; }
+        }
+        .ghost.float-reverse { animation-direction: reverse; }
+
+        .xyron-card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(8, 8, 8, 0.92);
+            backdrop-filter: blur(12px) saturate(150%);
+            -webkit-backdrop-filter: blur(12px) saturate(150%);
+            border-radius: 32px;
+            padding: 42px 34px 30px;
+            border: 1px solid rgba(200, 30, 30, 0.25);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(200, 30, 30, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.02), 0 0 60px rgba(200, 20, 20, 0.04);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.7s ease-out forwards;
+        }
+
+        .xyron-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 30%;
+            right: 30%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(220, 40, 40, 0.4), transparent);
+            border-radius: 100%;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .xyron-header { text-align: center; margin-bottom: 34px; }
+        .xyron-logo { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 2px; }
+        .xyron-logo i { font-size: 36px; color: #cc2222; filter: drop-shadow(0 0 30px rgba(200, 30, 30, 0.25)); }
+        .xyron-title { font-family: 'Orbitron', monospace; font-size: 40px; font-weight: 900; letter-spacing: 6px; color: #ffffff; text-shadow: 0 0 30px rgba(200, 30, 30, 0.15); }
+        .xyron-title .red { color: #cc2222; }
+        .xyron-tagline { font-family: 'Rajdhani', sans-serif; font-weight: 400; font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: rgba(180, 180, 180, 0.5); margin-top: 4px; }
+        .xyron-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(200, 30, 30, 0.15), transparent); margin-top: 16px; }
+
+        .xyron-form { display: flex; flex-direction: column; gap: 16px; margin-top: 6px; }
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50px;
+            border: 1px solid rgba(200, 30, 30, 0.15);
+            padding: 2px 20px;
+            transition: all 0.3s ease;
+        }
+        .input-group:hover { border-color: rgba(200, 30, 30, 0.3); }
+        .input-group:focus-within {
+            border-color: #cc2222;
+            box-shadow: 0 0 0 4px rgba(200, 30, 30, 0.08), 0 0 30px rgba(200, 20, 20, 0.03);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .input-group i { color: rgba(180, 60, 60, 0.5); font-size: 17px; width: 26px; text-align: center; transition: color 0.3s; flex-shrink: 0; }
+        .input-group:focus-within i { color: #cc2222; }
+        .input-group input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 16px 6px 16px 4px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #f0f0f0;
+            outline: none;
+            letter-spacing: 0.5px;
+        }
+        .input-group input::placeholder { color: rgba(180, 180, 180, 0.3); font-weight: 400; letter-spacing: 1px; }
+
+        .xyron-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2px 0 8px;
+            font-size: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .xyron-options label {
+            color: rgba(200, 200, 200, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+        }
+        .xyron-options label:hover { color: rgba(255, 255, 255, 0.8); }
+        .xyron-options label input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid rgba(200, 30, 30, 0.25);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.25s;
+            flex-shrink: 0;
+        }
+        .xyron-options label input[type="checkbox"]:checked {
+            background: #cc2222;
+            border-color: #cc2222;
+            box-shadow: 0 0 20px rgba(200, 30, 30, 0.2);
+        }
+        .xyron-options label input[type="checkbox"]:checked::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 11px;
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .xyron-options a {
+            color: rgba(200, 60, 60, 0.7);
+            text-decoration: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 500;
+            font-size: 13.5px;
+            border-bottom: 1px dotted rgba(200, 30, 30, 0.15);
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+        .xyron-options a:hover { color: #cc2222; border-bottom-color: #cc2222; }
+
+        .xyron-btn {
+            background: linear-gradient(145deg, #cc2222, #991111);
+            border: none;
+            padding: 18px 14px;
+            border-radius: 50px;
+            font-family: 'Orbitron', monospace;
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 3px;
+            box-shadow: 0 6px 30px rgba(200, 30, 30, 0.2), 0 0 0 1px rgba(200, 30, 30, 0.15);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 6px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+        .xyron-btn i { font-size: 17px; color: rgba(255, 255, 255, 0.6); transition: transform 0.25s; }
+        .xyron-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(200, 30, 30, 0.3); background: linear-gradient(145deg, #dd3333, #aa1111); }
+        .xyron-btn:active { transform: scale(0.97); box-shadow: 0 3px 15px rgba(200, 30, 30, 0.2); }
+        .xyron-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none !important; }
+        .xyron-btn .btn-loader { display: none; width: 20px; height: 20px; border: 2px solid rgba(255, 255, 255, 0.2); border-top: 2px solid #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        .xyron-btn.loading .btn-loader { display: inline-block; }
+        .xyron-btn.loading .btn-text { display: none; }
+        .xyron-btn.loading i { display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .xyron-register {
+            text-align: center;
+            margin-top: 26px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 400;
+            color: rgba(180, 180, 180, 0.4);
+            letter-spacing: 0.5px;
+        }
+        .xyron-register a {
+            color: rgba(200, 60, 60, 0.8);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(200, 30, 30, 0.15);
+            transition: all 0.2s;
+            margin-left: 4px;
+            letter-spacing: 0.5px;
+        }
+        .xyron-register a:hover { color: #cc2222; border-bottom-color: #cc2222; }
+
+        .xyron-footer {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(200, 30, 30, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px 18px;
+        }
+        .xyron-footer .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: rgba(180, 180, 180, 0.3);
+            letter-spacing: 0.5px;
+        }
+        .xyron-footer .footer-brand i { color: #cc2222; font-size: 13px; opacity: 0.5; }
+        .xyron-footer .footer-brand .highlight { color: rgba(255, 255, 255, 0.5); font-weight: 600; letter-spacing: 1px; }
+        .xyron-footer .footer-brand .wanz { color: #cc2222; font-weight: 700; letter-spacing: 1.5px; font-family: 'Orbitron', monospace; font-size: 12px; }
+
+        .notification-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: overlayIn 0.3s ease-out;
+        }
+        .notification-overlay.show { display: flex; }
+        @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .notification-popup {
+            background: rgba(10, 10, 10, 0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(200, 30, 30, 0.15);
+            border-radius: 24px;
+            padding: 32px 28px 28px;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.95), 0 0 60px rgba(200, 20, 20, 0.05);
+            animation: popupIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center;
+        }
+        @keyframes popupIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .notification-popup .notif-icon { font-size: 48px; margin-bottom: 12px; display: block; }
+        .notification-popup .notif-icon.error { color: #ff4757; }
+        .notification-popup .notif-icon.success { color: #2ed573; }
+        .notification-popup .notif-icon.warning { color: #ffa502; }
+        .notification-popup .notif-icon.info { color: #1e90ff; }
+        .notification-popup .notif-title { font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 700; color: #fff; letter-spacing: 1px; margin-bottom: 6px; }
+        .notification-popup .notif-title .red { color: #cc2222; }
+        .notification-popup .notif-msg { color: rgba(180, 180, 180, 0.6); font-size: 15px; line-height: 1.5; margin: 8px 0 18px; font-weight: 400; }
+        .notification-popup .notif-msg .highlight { color: rgba(255, 255, 255, 0.6); font-weight: 600; }
+        .notification-popup .notif-btn {
+            background: linear-gradient(145deg, #cc2222, #991111);
+            border: none;
+            padding: 12px 32px;
+            border-radius: 50px;
+            font-family: 'Orbitron', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 20px rgba(200, 30, 30, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .notification-popup .notif-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200, 30, 30, 0.3); background: linear-gradient(145deg, #dd3333, #aa1111); }
+        .notification-popup .notif-btn i { font-size: 14px; color: rgba(255, 255, 255, 0.6); }
+        .notification-popup .notif-close { position: absolute; top: 12px; right: 16px; background: none; border: none; color: rgba(180, 180, 180, 0.15); font-size: 20px; cursor: pointer; transition: color 0.2s; }
+        .notification-popup .notif-close:hover { color: #cc2222; }
+
+        @media (min-width: 768px) {
+            .xyron-card { max-width: 440px; padding: 50px 42px 34px; border-radius: 40px; }
+            .xyron-title { font-size: 44px; }
+            .xyron-logo i { font-size: 40px; }
+            .input-group input { padding: 18px 8px 18px 4px; font-size: 17px; }
+            .xyron-btn { padding: 20px 16px; font-size: 16px; }
+            .notification-popup { padding: 40px 36px 32px; max-width: 440px; }
+        }
+        @media (max-width: 400px) {
+            .xyron-card { padding: 28px 18px 20px; border-radius: 28px; }
+            .xyron-title { font-size: 30px; letter-spacing: 3px; }
+            .xyron-logo i { font-size: 26px; }
+            .input-group { padding: 0 16px; }
+            .input-group input { padding: 14px 4px 14px 2px; font-size: 14px; }
+            .xyron-options { font-size: 13px; }
+            .xyron-btn { font-size: 13px; padding: 15px 10px; letter-spacing: 2px; }
+            .xyron-footer .footer-brand { font-size: 12px; }
+            .ghost { font-size: 40px !important; }
+            .notification-popup { padding: 24px 18px 22px; }
+            .notification-popup .notif-icon { font-size: 36px; }
+            .notification-popup .notif-title { font-size: 16px; }
+        }
+        input:-webkit-autofill, input:-webkit-autofill:focus { transition: background-color 0s 600000s, color 0s 600000s; }
+    </style>
+</head>
+<body>
+
+    <div class="ghost-container" aria-hidden="true">
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+    </div>
+
+    <div class="notification-overlay" id="notifOverlay">
+        <div class="notification-popup">
+            <button class="notif-close" onclick="closeNotification()">
+                <i class="fas fa-times"></i>
+            </button>
+            <span class="notif-icon" id="notifIcon">
+                <i class="fas fa-skull"></i>
+            </span>
+            <div class="notif-title" id="notifTitle">
+                <span class="red">X</span>YRON · SYSTEM
+            </div>
+            <div class="notif-msg" id="notifMsg">
+                Selamat datang di <span class="highlight">Xyron</span>.
+            </div>
+            <button class="notif-btn" onclick="closeNotification()">
+                <i class="fas fa-check"></i> OK
+            </button>
+        </div>
+    </div>
+
+    <div class="xyron-card" role="main" aria-label="Xyron Login">
+        <div class="xyron-header">
+            <div class="xyron-logo">
+                <i class="fas fa-bolt" aria-hidden="true"></i>
+                <span class="xyron-title"><span class="red">X</span>YRON</span>
+            </div>
+            <div class="xyron-tagline">secure access</div>
+            <div class="xyron-divider"></div>
+        </div>
+
+        <form class="xyron-form" id="loginForm" autocomplete="on">
+            <div class="input-group">
+                <i class="fas fa-user" aria-hidden="true"></i>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Username"
+                    required
+                    autocomplete="username"
+                />
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock" aria-hidden="true"></i>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                    autocomplete="current-password"
+                />
+            </div>
+
+            <div class="xyron-options">
+                <label for="remember">
+                    <input type="checkbox" id="remember" name="remember" checked />
+                    <span>Ingat saya</span>
+                </label>
+                <a href="#" aria-label="Lupa password" onclick="showInfo('Fitur ini segera hadir!')">Lupa password?</a>
+            </div>
+
+            <button type="submit" class="xyron-btn" id="loginBtn">
+                <i class="fas fa-arrow-right-to-bracket" aria-hidden="true"></i>
+                <span class="btn-text">MASUK</span>
+                <span class="btn-loader"></span>
+            </button>
+        </form>
+
+        <div class="xyron-register">
+            Belum punya akun? <a href="https://wa.me/6283898206223" target="_blank">beli disini</a>
+        </div>
+
+        <div class="xyron-footer">
+            <div class="footer-brand">
+                <i class="fas fa-code" aria-hidden="true"></i>
+                <span class="highlight">Created by</span>
+                <span class="wanz">WanzOfficial</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // KONFIGURASI - SEMUA OTAK ADA DI CONNECT.JS
+        // Client cuma tau endpoint doang, nggak tau API key & base URL
+        // ============================================================
+        
+        // === GANTI DENGAN URL VERCEL KAMU ===
+        const PROXY_URL = 'https://api-xyron.vercel.app/api'; // ⚠️ GANTI INI!
+
+        // ============================================================
+        // FUNGSI NOTIFIKASI
+        // ============================================================
+        function showNotification(icon, title, msg, type = 'info') {
+            const overlay = document.getElementById('notifOverlay');
+            const iconEl = document.getElementById('notifIcon');
+            const titleEl = document.getElementById('notifTitle');
+            const msgEl = document.getElementById('notifMsg');
+
+            const iconMap = {
+                'error': 'fa-times-circle',
+                'success': 'fa-check-circle',
+                'warning': 'fa-exclamation-triangle',
+                'info': 'fa-info-circle'
+            };
+
+            const iconClass = iconMap[type] || 'fa-skull';
+            iconEl.className = 'notif-icon ' + type;
+            iconEl.innerHTML = `<i class="fas ${iconClass}"></i>`;
+
+            titleEl.innerHTML = `<span class="red">X</span>YRON · ${title || 'SYSTEM'}`;
+            msgEl.innerHTML = msg || 'Status sistem normal.';
+
+            overlay.classList.add('show');
+
+            clearTimeout(window.notifTimeout);
+            window.notifTimeout = setTimeout(closeNotification, 6000);
+        }
+
+        function closeNotification() {
+            document.getElementById('notifOverlay').classList.remove('show');
+            clearTimeout(window.notifTimeout);
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeNotification();
+        });
+
+        function showInfo(msg) {
+            showNotification('info', 'INFORMASI', msg, 'info');
+        }
+
+        // ============================================================
+        // LOGIN HANDLER
+        // ============================================================
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const loginBtn = document.getElementById('loginBtn');
+
+            // Validasi
+            if (!username || !password) {
+                showNotification('warning', 'VALIDASI', 'Username dan password <span class="highlight">harus diisi</span>!', 'warning');
+                return;
+            }
+
+            // Loading state
+            loginBtn.classList.add('loading');
+            loginBtn.disabled = true;
+
+            try {
+                // === CLIENT CUMA NGIRIM username & password ===
+                // connect.js yang bakal nambahin apikey & routing
+                const response = await fetch(
+                    `${PROXY_URL}/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                // Reset loading
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+
+                // Cek status dari response
+                if (data.status === 'success') {
+                    // Simpan data user (tanpa password)
+                    localStorage.setItem('user', JSON.stringify(data.data));
+                    localStorage.setItem('token', data.data.token || 'temp-token');
+
+                    showNotification(
+                        'success',
+                        'LOGIN BERHASIL',
+                        `Selamat datang, <span class="highlight">${data.data.username}</span>!`,
+                        'success'
+                    );
+
+                    setTimeout(() => {
+                        window.location.href = '/xyron/dashboard.html';
+                    }, 1500);
+
+                } else {
+                    // Handle error dari proxy / API utama
+                    let errorMsg = data.message || 'Login gagal. Coba lagi.';
+                    
+                    // Kalo ada data error tambahan
+                    if (data.data) {
+                        if (data.data.status === 'expired') {
+                            errorMsg = `Akun sudah <span class="highlight">kadaluarsa</span> pada ${data.data.expired_date || 'tanggal tidak diketahui'}`;
+                        }
+                    }
+
+                    showNotification('error', 'LOGIN GAGAL', errorMsg, 'error');
+                }
+
+            } catch (error) {
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+
+                let errorMsg = 'Terjadi kesalahan. Silakan coba lagi.';
+                if (error.message === 'Failed to fetch') {
+                    errorMsg = 'Tidak dapat terhubung ke server proxy.';
+                } else if (error.message.includes('NetworkError')) {
+                    errorMsg = 'Masalah koneksi jaringan.';
+                }
+
+                showNotification('error', 'KONEKSI GAGAL', errorMsg, 'error');
+            }
+        });
+
+        // Enter key support
+        document.getElementById('password').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
+        });
+
+        // ============================================================
+        // AUTO REDIRECT JIKA SUDAH LOGIN
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const userData = JSON.parse(localStorage.getItem('user') || 'null');
+            if (userData) {
+                window.location.href = '/xyron/dashboard.html';
+            }
+        });
+
+    </script>
+
+</body>
+</html>
