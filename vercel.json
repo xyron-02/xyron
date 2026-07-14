@@ -16,8 +16,12 @@
       "dest": "/api/connect.js"
     },
     {
+      "src": "/",
+      "dest": "/public/xyron/index.html"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/public/$1"
+      "dest": "/public/xyron/$1"
     }
   ],
   "env": {
