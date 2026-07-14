@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Xyron · Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0a0a0a;
+            background-image:
+                radial-gradient(ellipse at 30% 20%, #1a0808 0%, #0a0a0a 70%),
+                radial-gradient(ellipse at 70% 80%, #1a0505 0%, #0a0a0a 60%);
+            font-family: 'Rajdhani', 'Inter', -apple-system, sans-serif;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            padding: 0;
+        }
+
+        /* GHOST BACKGROUND - Lebih halus dan ringan */
+        .ghost-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .ghost {
+            position: absolute;
+            color: rgba(180, 20, 20, 0.04);
+            font-size: 40px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            letter-spacing: 6px;
+            user-select: none;
+            animation: floatGhost linear infinite;
+            text-shadow: 0 0 40px rgba(255, 0, 0, 0.02);
+            white-space: nowrap;
+        }
+
+        .ghost:nth-child(1) { font-size: 60px; left: -10%; top: 5%; animation-duration: 25s; opacity: 0.03; }
+        .ghost:nth-child(2) { font-size: 80px; right: -15%; top: 15%; animation-duration: 30s; animation-delay: -4s; opacity: 0.02; transform: rotate(-6deg); }
+        .ghost:nth-child(3) { font-size: 40px; left: 15%; bottom: 10%; animation-duration: 20s; animation-delay: -7s; opacity: 0.05; }
+        .ghost:nth-child(4) { font-size: 70px; right: 10%; bottom: 20%; animation-duration: 27s; animation-delay: -12s; opacity: 0.03; transform: rotate(4deg); }
+        .ghost:nth-child(5) { font-size: 30px; left: 5%; top: 45%; animation-duration: 22s; animation-delay: -3s; opacity: 0.06; font-family: 'Rajdhani', sans-serif; letter-spacing: 10px; }
+        .ghost:nth-child(6) { font-size: 50px; right: 5%; top: 55%; animation-duration: 26s; animation-delay: -9s; opacity: 0.02; transform: rotate(-10deg); }
+        .ghost:nth-child(7) { font-size: 25px; left: 50%; top: 5%; animation-duration: 18s; animation-delay: -5s; opacity: 0.07; letter-spacing: 5px; }
+        .ghost:nth-child(8) { font-size: 90px; left: 30%; bottom: -10%; animation-duration: 32s; animation-delay: -14s; opacity: 0.02; transform: rotate(-5deg); }
+
+        @keyframes floatGhost {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.02; }
+            25% { opacity: 0.06; }
+            50% { transform: translate(40px, -60px) scale(1.05) rotate(2deg); opacity: 0.03; }
+            75% { opacity: 0.07; }
+            100% { transform: translate(-30px, 50px) scale(0.95) rotate(-2deg); opacity: 0.02; }
+        }
+
+        .ghost.float-reverse { animation-direction: reverse; }
+
+        /* SIDEBAR - Mobile First */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: rgba(8, 8, 8, 0.97);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid rgba(200, 30, 30, 0.12);
+            z-index: 1000;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 40px rgba(0, 0, 0, 0.9);
+        }
+
+        .sidebar.open { left: 0; }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(200, 30, 30, 0.06);
+        }
+
+        .sidebar-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-header .brand i {
+            font-size: 20px;
+            color: #cc2222;
+        }
+
+        .sidebar-header .brand span {
+            font-family: 'Orbitron', monospace;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .sidebar-header .brand span .red { color: #cc2222; }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: rgba(180, 180, 180, 0.3);
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 4px;
+        }
+
+        .sidebar-close:hover { color: #cc2222; }
+
+        .sidebar-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .sidebar-menu .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            color: rgba(180, 180, 180, 0.4);
+            text-decoration: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+
+        .sidebar-menu .menu-item i {
+            font-size: 16px;
+            width: 22px;
+            text-align: center;
+            color: rgba(180, 60, 60, 0.3);
+            transition: color 0.2s;
+        }
+
+        .sidebar-menu .menu-item:hover {
+            background: rgba(200, 30, 30, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .sidebar-menu .menu-item:hover i { color: #cc2222; }
+
+        .sidebar-menu .menu-item.active {
+            background: rgba(200, 30, 30, 0.07);
+            color: #ffffff;
+            border-left: 2px solid #cc2222;
+        }
+
+        .sidebar-menu .menu-item.active i { color: #cc2222; }
+
+        .sidebar-menu .menu-item.logout {
+            margin-top: auto;
+            border-top: 1px solid rgba(200, 30, 30, 0.05);
+            padding-top: 14px;
+            color: rgba(200, 60, 60, 0.4);
+        }
+
+        .sidebar-menu .menu-item.logout:hover {
+            color: #cc2222;
+            background: rgba(200, 30, 30, 0.06);
+        }
+
+        .sidebar-menu .menu-item.logout:hover i { color: #cc2222; }
+
+        /* OVERLAY */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* MAIN CONTENT - Mobile First */
+        .main-content {
+            flex: 1;
+            margin-left: 0;
+            padding: 12px 14px 80px;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(200, 30, 30, 0.04);
+        }
+
+        .hamburger {
+            background: none;
+            border: none;
+            color: rgba(180, 180, 180, 0.4);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 4px 6px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger:hover { color: #cc2222; }
+
+        .topbar-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 1.5px;
+        }
+
+        .topbar-title .red { color: #cc2222; }
+
+        .topbar-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topbar-right .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 4px 12px 4px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(200, 30, 30, 0.04);
+        }
+
+        .topbar-right .user-badge i {
+            color: #cc2222;
+            font-size: 14px;
+        }
+
+        .topbar-right .user-badge span {
+            color: rgba(180, 180, 180, 0.4);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* PAGE CONTENT */
+        .page-content {
+            animation: fadeInUp 0.35s ease-out forwards;
+        }
+
+        .page-content .page-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+        }
+
+        .page-content .page-title .red { color: #cc2222; }
+
+        .page-content .page-desc {
+            color: rgba(180, 180, 180, 0.3);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            margin-bottom: 18px;
+        }
+
+        .page-content .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .page-content .card-grid .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(200, 30, 30, 0.05);
+            border-radius: 12px;
+            padding: 14px 12px;
+            transition: all 0.25s ease;
+        }
+
+        .page-content .card-grid .stat-card:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(200, 30, 30, 0.1);
+        }
+
+        .page-content .card-grid .stat-card .stat-icon {
+            font-size: 20px;
+            color: #cc2222;
+            opacity: 0.4;
+            margin-bottom: 4px;
+        }
+
+        .page-content .card-grid .stat-card .stat-value {
+            font-family: 'Orbitron', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .page-content .card-grid .stat-card .stat-label {
+            color: rgba(180, 180, 180, 0.25);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+
+        .page-content .content-box {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(200, 30, 30, 0.04);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 10px;
+        }
+
+        .page-content .content-box .box-title {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            margin-bottom: 10px;
+        }
+
+        .page-content .content-box .box-item {
+            color: rgba(180, 180, 180, 0.35);
+            font-size: 13px;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(200, 30, 30, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .page-content .content-box .box-item:last-child { border-bottom: none; }
+
+        .page-content .content-box .box-item i {
+            color: #cc2222;
+            opacity: 0.4;
+            width: 16px;
+            font-size: 13px;
+        }
+
+        .page-content .content-box .box-item .status-on {
+            color: #22cc66;
+            font-size: 10px;
+            margin-left: auto;
+        }
+
+        .page-content .content-box .box-item .status-off {
+            color: #cc2222;
+            font-size: 10px;
+            margin-left: auto;
+        }
+
+        .page-content .content-box .box-item .status-warn {
+            color: #e6a020;
+            font-size: 10px;
+            margin-left: auto;
+        }
+
+        /* NOTIFICATION / POPUP */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            left: 20px;
+            max-width: 380px;
+            margin: 0 auto;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(200, 30, 30, 0.15);
+            border-radius: 16px;
+            padding: 18px 20px;
+            z-index: 2000;
+            transform: translateY(-120px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(200, 20, 20, 0.05);
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification .notif-icon {
+            font-size: 24px;
+            color: #cc2222;
+            margin-bottom: 6px;
+        }
+
+        .notification .notif-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .notification .notif-title .red { color: #cc2222; }
+
+        .notification .notif-msg {
+            color: rgba(180, 180, 180, 0.5);
+            font-size: 14px;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .notification .notif-close {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            background: none;
+            border: none;
+            color: rgba(180, 180, 180, 0.2);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .notification .notif-close:hover { color: #cc2222; }
+
+        /* HIDE ALL PAGES EXCEPT ACTIVE */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* RESPONSIVE - Mobile First */
+        @media (min-width: 480px) {
+            .main-content {
+                padding: 16px 20px 80px;
+            }
+            .page-content .card-grid {
+                gap: 12px;
+            }
+            .page-content .card-grid .stat-card {
+                padding: 16px 14px;
+            }
+            .page-content .page-title {
+                font-size: 26px;
+            }
+        }
+
+        @media (min-width: 640px) {
+            .main-content {
+                padding: 20px 28px 80px;
+            }
+            .page-content .card-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 14px;
+            }
+            .topbar-title {
+                font-size: 16px;
+            }
+            .notification {
+                left: auto;
+                right: 24px;
+                max-width: 400px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .main-content {
+                padding: 28px 40px 80px;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            .page-content .card-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+            }
+            .page-content .page-title {
+                font-size: 32px;
+            }
+            .sidebar {
+                left: 0;
+                width: 240px;
+                border-right: 1px solid rgba(200, 30, 30, 0.08);
+            }
+            .sidebar-overlay { display: none; }
+            .hamburger { display: none; }
+            .main-content {
+                margin-left: 240px;
+                padding: 28px 36px 80px;
+            }
+            .sidebar-close { display: none; }
+            .notification {
+                top: 24px;
+                right: 32px;
+                max-width: 420px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .page-content .card-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .page-content .card-grid .stat-card {
+                padding: 10px 10px;
+            }
+            .page-content .card-grid .stat-card .stat-value {
+                font-size: 15px;
+            }
+            .page-content .card-grid .stat-card .stat-label {
+                font-size: 10px;
+            }
+            .page-content .page-title {
+                font-size: 18px;
+            }
+            .topbar-title {
+                font-size: 12px;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(200, 30, 30, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(200, 30, 30, 0.4); }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:focus {
+            transition: background-color 0s 600000s, color 0s 600000s;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GHOST BACKGROUND -->
+    <div class="ghost-container" aria-hidden="true">
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+        <div class="ghost">XYRON</div>
+        <div class="ghost float-reverse">XYRON</div>
+    </div>
+
+    <!-- OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                <i class="fas fa-bolt"></i>
+                <span><span class="red">X</span>YRON</span>
+            </div>
+            <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Close sidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="sidebar-menu">
+            <button class="menu-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </button>
+            <button class="menu-item" data-page="profile" onclick="navigateTo('profile')">
+                <i class="fas fa-user"></i> Profile
+            </button>
+            <button class="menu-item" data-page="bugs" onclick="navigateTo('bugs')">
+                <i class="fas fa-bug"></i> Bugs
+            </button>
+            <button class="menu-item" data-page="sender" onclick="navigateTo('sender')">
+                <i class="fas fa-paper-plane"></i> Sender
+            </button>
+            <button class="menu-item" data-page="tools" onclick="navigateTo('tools')">
+                <i class="fas fa-tools"></i> Tools
+            </button>
+            <button class="menu-item" data-page="settings" onclick="navigateTo('settings')">
+                <i class="fas fa-cog"></i> Settings
+            </button>
+            <button class="menu-item logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Log Out
+            </button>
+        </div>
+    </nav>
+
+    <!-- NOTIFICATION / POPUP -->
+    <div class="notification" id="notification">
+        <button class="notif-close" onclick="closeNotif()"><i class="fas fa-times"></i></button>
+        <div class="notif-icon"><i class="fas fa-skull"></i></div>
+        <div class="notif-title"><span class="red">X</span>YRON · SYSTEM</div>
+        <div class="notif-msg" id="notifMsg">Selamat datang, WanzOfficial. Semua sistem berjalan normal.</div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <button class="hamburger" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                <i class="fas fa-ellipsis-vertical"></i>
+            </button>
+            <span class="topbar-title"><span class="red">X</span>YRON · DASHBOARD</span>
+            <div class="topbar-right">
+                <div class="user-badge">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Wanz</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE: DASHBOARD ==================== -->
+        <div class="page active" id="page-dashboard">
+            <div class="page-content">
+                <h1 class="page-title"><span class="red">X</span>YR<span class="red">O</span>N</h1>
+                <p class="page-desc">Status sistem & data realtime</p>
+
+                <div class="card-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-microchip"></i></div>
+                        <div class="stat-value" id="deviceCpu">Intel i7-10750H</div>
+                        <div class="stat-label">CPU</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-memory"></i></div>
+                        <div class="stat-value" id="deviceRam">16 GB</div>
+                        <div class="stat-label">RAM</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-hdd"></i></div>
+                        <div class="stat-value" id="deviceStorage">512 GB SSD</div>
+                        <div class="stat-label">Storage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-wifi"></i></div>
+                        <div class="stat-value" id="networkStatus">● Online</div>
+                        <div class="stat-label">Jaringan</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-server"></i></div>
+                        <div class="stat-value" id="serverStatus">● Aktif</div>
+                        <div class="stat-label">Server</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="stat-value" id="systemLoad">23%</div>
+                        <div class="stat-label">Beban Sistem</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-tools"></i></div>
+                        <div class="stat-value" id="totalTools">24</div>
+                        <div class="stat-label">Total Tools</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="stat-value" id="securityStatus">● Aman</div>
+                        <div class="stat-label">Keamanan</div>
+                    </div>
+                </div>
+
+                <div class="content-box">
+                    <div class="box-title"><i class="fas fa-info-circle" style="color:#cc2222;opacity:0.4;margin-right:6px;"></i> Data Sistem Detail</div>
+                    <div class="box-item"><i class="fas fa-desktop"></i> OS: <span id="osInfo">Windows 11 Pro</span></div>
+                    <div class="box-item"><i class="fas fa-clock"></i> Uptime: <span id="uptimeInfo">3d 14h 22m</span></div>
+                    <div class="box-item"><i class="fas fa-bolt"></i> Daya: <span id="powerInfo">AC — 95%</span></div>
+                    <div class="box-item"><i class="fas fa-thermometer-half"></i> Suhu CPU: <span id="tempInfo">54°C</span> <span class="status-on">● Normal</span></div>
+                    <div class="box-item"><i class="fas fa-network-wired"></i> IP: <span id="ipInfo">192.168.1.105</span></div>
+                    <div class="box-item"><i class="fas fa-database"></i> Database: <span id="dbStatus">● Terkoneksi</span> <span class="status-on">● OK</span></div>
+                    <div class="box-item"><i class="fas fa-fingerprint"></i> Sesi: <span id="sessionInfo">#SESI-2026-0714-XY22</span></div>
+                    <div class="box-item"><i class="fas fa-user-secret"></i> Hak Akses: <span id="accessLevel">Administrator</span></div>
+                    <div class="box-item"><i class="fas fa-code-branch"></i> Versi Sistem: <span id="systemVersion">v2.4.1-stable</span></div>
+                    <div class="box-item"><i class="fas fa-calendar-alt"></i> Terakhir Update: <span id="lastUpdate">14 Jul 2026 21:30:12</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE: PROFILE ==================== -->
+        <div class="page" id="page-profile">
+            <div class="page-content">
+                <h1 class="page-title"><span class="red">P</span>rofile</h1>
+                <p class="page-desc">Informasi akun Anda.</p>
+                <div class="card-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-user-circle"></i></div>
+                        <div class="stat-value">WanzOfficial</div>
+                        <div class="stat-label">Username</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="stat-value">wanz@xyron.id</div>
+                        <div class="stat-label">Email</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="stat-value">14 Jul 2026</div>
+                        <div class="stat-label">Bergabung</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="stat-value">Premium</div>
+                        <div class="stat-label">Tipe Akun</div>
+                    </div>
+                </div>
+                <div class="content-box">
+                    <div class="box-title"><i class="fas fa-edit" style="color:#cc2222;opacity:0.4;margin-right:6px;"></i> Detail Profil</div>
+                    <div class="box-item"><i class="fas fa-id-card"></i> Nama: Wanz Official</div>
+                    <div class="box-item"><i class="fas fa-phone"></i> +62 838-9820-6223</div>
+                    <div class="box-item"><i class="fas fa-map-marker-alt"></i> Indonesia</div>
+                    <div class="box-item"><i class="fas fa-clock"></i> Login: 14 Jul 2026 21:30</div>
+                    <div class="box-item"><i class="fas fa-qrcode"></i> 2FA: Nonaktif</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE: BUGS ==================== -->
+        <div class="page" id="page-bugs">
+            <div class="page-content">
+                <h1 class="page-title"><span class="red">B</span>ugs</h1>
+                <p class="page-desc">Laporan bug sistem.</p>
+                <div class="card-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Total Bug</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Selesai</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Proses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                </div>
+                <div class="content-box">
+                    <div class="box-title"><i class="fas fa-list" style="color:#cc2222;opacity:0.4;margin-right:6px;"></i> Daftar Bug</div>
+                    <div class="box-item"><i class="fas fa-circle" style="color:#22cc66;font-size:8px;"></i> #BUG-001 — Login error (Selesai)</div>
+                    <div class="box-item"><i class="fas fa-circle" style="color:#e6a020;font-size:8px;"></i> #BUG-002 — Sidebar responsif (Proses)</div>
+                    <div class="box-item"><i class="fas fa-circle" style="color:#e6a020;font-size:8px;"></i> #BUG-003 — Data hilang (Proses)</div>
+                    <div class="box-item"><i class="fas fa-circle" style="color:#cc2222;font-size:8px;"></i> #BUG-004 — Crash upload (Pending)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE: SENDER ==================== -->
+        <div class="page" id="page-sender">
+            <div class="page-content">
+                <h1 class="page-title"><span class="red">S</span>ender</h1>
+                <p class="page-desc">Kirim & monitor pesan.</p>
+                <div class="card-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-paper-plane"></i></div>
+                        <div class="stat-value">1.234</div>
+                        <div class="stat-label">Total Kirim</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-check-double"></i></div>
+                        <div class="stat-value">98%</div>
+                        <div class="stat-label">Terkirim</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-value">567</div>
+                        <div class="stat-label">Penerima</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Antrian</div>
+                    </div>
+                </div>
+                <div class="content-box">
+                    <div class="box-title"><i class="fas fa-history" style="color:#cc2222;opacity:0.4;margin-right:6px;"></i> Riwayat</div>
+                    <div class="box-item"><i class="fas fa-check-circle" style="color:#22cc66;"></i> Broadcast #001 — 12 Jul 2026 (200)</div>
+                    <div class="box-item"><i class="fas fa-check-circle" style="color:#22cc66;"></i> Broadcast #002 — 13 Jul 2026 (150)</div>
+                    <div class="box-item"><i class="fas fa-spinner" style="color:#e6a020;"></i> Broadcast #003 — 14 Jul 2026 (217) [Proses]</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE: TOOLS ==================== -->
+        <div class="page" id="page-tools">
+            <div class="page-content">
+                <h1 class="page-title"><span class="red">T</span>ools</h1>
+                <p class="page-desc">Akses cepat alat bantu.</p>
+                <div class="card-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-database"></i></div>
+                        <div class="stat-value">Backup</div>
+                        <div class="stat-label">14 Jul 2026</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-robot"></i></div>
+                        <div class="stat-value">Auto-Reply</div>
+                        <div class="stat-label">● Aktif</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="stat-value">Analytics</div>
+                        <div class="stat-label">Realtime</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-file-export"></i></div>
+                        <div class="stat-value">Export</div>
+                        <div class="stat-label">CSV/JSON</div>
+                    </div>
+                </div>
+                <div class="content-box">
+                    <div class="box-title"><i class="fas fa-wrench" style="color:#cc2222;opacity:0.4;margin-right:6px;"></i> Quick Access</div>
+                    <div class="box-item"><i class="fas fa-trash-alt"></i> Bersihkan Cache</div>
+                    <div class="box-item"><i class="fas fa-sync"></i> Sinkronisasi</div>
+                    <div class="box-item"><i class="fas fa-shield-alt"></i> Scan Keamanan</div>
+                    <div class="box-item"><i class="fas fa-undo"></i> Restore Backup</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PAGE: SETTINGS ==================== -->
+        <div class="page" id="page-settings">
+            <div class="page-content">
+                <h1 class="page-title"><span class="red">S</span>ettings</h1>
+                <p class="page-desc">Konfigurasi sistem.</p>
+                <div class="content-box">
+                    <div class="box-title"><i class="fas fa-sliders-h" style="color:#cc2222;opacity:0.4;margin-right:6px;"></i> Umum</div>
+                    <div class="box-item"><i class="fas fa-globe"></i> Bahasa: Indonesia</div>
+                    <div class="box-item"><i class="fas fa-moon"></i> Mode Gelap: Aktif</div>
+                    <div class="box-item"><i class="fas fa-bell"></i> Notifikasi: Aktif</div>
+                    <div class="box-item"><i class="fas fa-lock"></i> 2FA: Nonaktif</div>
+                    <div class="box-item"><i class="fas fa-eye"></i> Privasi: Publik</div>
+                </div>
+                <div class="content-box" style="margin-top:10px;">
+                    <div class="box-title"><i class="fas fa-database" style="color:#cc2222;opacity:0.4;margin-right:6px;"></i> Data</div>
+                    <div class="box-item"><i class="fas fa-hdd"></i> Storage: 2.4 GB / 10 GB</div>
+                    <div class="box-item"><i class="fas fa-cloud-upload-alt"></i> Backup: 24 jam</div>
+                    <div class="box-item"><i class="fas fa-history"></i> Riwayat: 30 hari</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // ============================================================
+        // SIDEBAR TOGGLE
+        // ============================================================
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        // ============================================================
+        // NAVIGASI
+        // ============================================================
+        function navigateTo(pageId) {
+            const isDesktop = window.innerWidth >= 1024;
+
+            // Jika bukan dashboard, pindah ke file eksternal
+            if (pageId !== 'dashboard') {
+                const pageMap = {
+                    'profile': 'profile.html',
+                    'bugs': 'execution.html',
+                    'sender': 'sender.html',
+                    'tools': 'tools.html',
+                    'settings': 'settings.html'
+                };
+                const target = pageMap[pageId];
+                if (target) {
+                    showNotification('🚀', 'Redirecting', 'Mengalihkan ke ' + target + ' ...');
+                    setTimeout(function() {
+                        window.location.href = target;
+                    }, 1200);
+                }
+                return;
+            }
+
+            // Dashboard — tetap di halaman ini
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + pageId);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.sidebar-menu .menu-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === pageId) {
+                    item.classList.add('active');
+                }
+            });
+
+            if (!isDesktop) toggleSidebar();
+        }
+
+        // ============================================================
+        // LOGOUT
+        // ============================================================
+        function logout() {
+            showNotification('👻', 'Logout', 'Sesi Anda telah diakhiri. Sampai jumpa...');
+            setTimeout(function() {
+                // window.location.href = 'login.html';
+            }, 1500);
+        }
+
+        // ============================================================
+        // NOTIFICATION / POPUP KEREN
+        // ============================================================
+        let notifTimeout;
+
+        function showNotification(icon, title, msg) {
+            const notif = document.getElementById('notification');
+            const notifIcon = notif.querySelector('.notif-icon i');
+            const notifTitle = notif.querySelector('.notif-title');
+            const notifMsg = document.getElementById('notifMsg');
+
+            notifIcon.className = 'fas ' + (icon || 'fa-skull');
+            notifTitle.innerHTML = '<span class="red">X</span>YRON · ' + (title || 'SYSTEM');
+            notifMsg.textContent = msg || 'Status sistem normal.';
+
+            notif.classList.add('show');
+            clearTimeout(notifTimeout);
+
+            // Auto close setelah 5 detik
+            notifTimeout = setTimeout(function() {
+                closeNotif();
+            }, 5000);
+        }
+
+        function closeNotif() {
+            document.getElementById('notification').classList.remove('show');
+            clearTimeout(notifTimeout);
+        }
+
+        // ============================================================
+        // DETECT DEVICE INFO (simulasi)
+        // ============================================================
+        function detectDevice() {
+            const ua = navigator.userAgent;
+            let os = 'Unknown';
+            if (ua.indexOf('Windows') !== -1) os = 'Windows 11 Pro';
+            else if (ua.indexOf('Mac') !== -1) os = 'macOS';
+            else if (ua.indexOf('Linux') !== -1) os = 'Linux';
+            else if (ua.indexOf('Android') !== -1) os = 'Android';
+            else if (ua.indexOf('iOS') !== -1 || ua.indexOf('iPhone') !== -1) os = 'iOS';
+
+            document.getElementById('osInfo').textContent = os;
+
+            // Simulasi data hardware (tampilkan di dashboard)
+            const ram = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : '16 GB';
+            document.getElementById('deviceRam').textContent = ram;
+
+            // Simulasi storage
+            if ('storage' in navigator && 'estimate' in navigator.storage) {
+                navigator.storage.estimate().then(estimate => {
+                    const gb = (estimate.usage / 1024 / 1024 / 1024).toFixed(1);
+                    const total = '512 GB SSD';
+                    document.getElementById('deviceStorage').textContent = total;
+                });
+            }
+
+            // Simulasi IP (pakai WebRTC atau fallback)
+            document.getElementById('ipInfo').textContent = '192.168.1.' + Math.floor(Math.random() * 254 + 1);
+
+            // Simulasi uptime
+            const days = Math.floor(Math.random() * 7 + 1);
+            const hours = Math.floor(Math.random() * 24);
+            const mins = Math.floor(Math.random() * 60);
+            document.getElementById('uptimeInfo').textContent = days + 'd ' + hours + 'h ' + mins + 'm';
+
+            // Simulasi suhu
+            const temp = Math.floor(Math.random() * 30 + 40);
+            document.getElementById('tempInfo').textContent = temp + '°C';
+
+            // Simulasi beban sistem
+            const load = Math.floor(Math.random() * 40 + 5);
+            document.getElementById('systemLoad').textContent = load + '%';
+
+            // Simulasi session
+            const sessionId = '#SESI-2026-0714-' + String.fromCharCode(65 + Math.floor(Math.random() * 26)) + String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Math.floor(Math.random() * 100);
+            document.getElementById('sessionInfo').textContent = sessionId;
+        }
+
+        // ============================================================
+        // TUTUP SIDEBAR KALO KLIK DI LUAR
+        // ============================================================
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const hamburger = document.querySelector('.hamburger');
+
+            if (window.innerWidth < 1024) {
+                if (sidebar.classList.contains('open')) {
+                    if (!sidebar.contains(e.target) && !hamburger.contains(e.target)) {
+                        toggleSidebar();
+                    }
+                }
+            }
+        });
+
+        // ============================================================
+        // KEYBOARD: ESC
+        // ============================================================
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar.classList.contains('open')) toggleSidebar();
+                closeNotif();
+            }
+        });
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            detectDevice();
+            // Tampilkan notifikasi selamat datang
+            setTimeout(function() {
+                showNotification('fa-skull', 'SYSTEM ACTIVE', 'Selamat datang, WanzOfficial. Semua sistem berjalan normal.');
+            }, 600);
+        });
+
+        console.log('🚀 Xyron Dashboard v2 — WanzOfficial');
+    </script>
+</body>
+</html>
