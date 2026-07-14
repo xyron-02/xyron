@@ -20,6 +20,18 @@
       "dest": "/public/xyron/index.html"
     },
     {
+      "src": "/(.*)\\.html",
+      "dest": "/public/xyron/$1.html"
+    },
+    {
+      "src": "/(.*)\\.css",
+      "dest": "/public/xyron/$1.css"
+    },
+    {
+      "src": "/(.*)\\.js",
+      "dest": "/public/xyron/$1.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/public/xyron/$1"
     }
