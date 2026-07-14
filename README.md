@@ -1,2 +1,0 @@
-# xyron
-Wanz Official
